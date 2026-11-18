@@ -79,7 +79,7 @@ def create_app(test_config=None):
     def index():
         posts = get_db().execute(
             """
-            SELECT posts.message, posts.created_at, users.username
+            SELECT posts.id, posts.message, posts.created_at, posts.user_id, users.username
             FROM posts
             JOIN users ON users.id = posts.user_id
             ORDER BY posts.id DESC
@@ -154,6 +154,22 @@ def create_app(test_config=None):
             (session["user_id"], message),
         )
         database.commit()
+        return redirect(url_for("index"))
+
+    @app.route("/post/<int:post_id>/delete", methods=["POST"])
+    @login_required
+    def delete_post(post_id):
+        database = get_db()
+        cursor = database.execute(
+            "DELETE FROM posts WHERE id = ? AND user_id = ?",
+            (post_id, session["user_id"]),
+        )
+        database.commit()
+
+        if cursor.rowcount == 0:
+            abort(404)
+
+        flash("Inlägget togs bort.")
         return redirect(url_for("index"))
 
     return app

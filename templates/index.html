@@ -70,6 +70,14 @@
             <article class="post">
                 <div class="post-meta">{{ post["username"] }} · {{ post["created_at"] }}</div>
                 <p>{{ post["message"] }}</p>
+                {% if session.get("user_id") == post["user_id"] %}
+                    <form action="{{ url_for('delete_post', post_id=post['id']) }}" method="post">
+                        <input type="hidden" name="csrf_token" value="{{ session['csrf_token'] }}">
+                        <button type="submit" onclick="return confirm('Vill du ta bort inlägget?');">
+                            Ta bort
+                        </button>
+                    </form>
+                {% endif %}
             </article>
         {% endfor %}
     {% endif %}
