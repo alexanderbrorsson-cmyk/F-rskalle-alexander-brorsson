@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.py[cod]
+forum.sqlite
+forum.sqlite-journal
+forum.sqlite-shm
+forum.sqlite-wal
